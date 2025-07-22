@@ -13,9 +13,9 @@ spec:
         app: {{ .Chart.Name }}
     spec:
       containers:
-        - resources: {}
+        - name: {{ .Chart.Name }}
+          resources: {}
           terminationMessagePath: /dev/termination-log
-          name: {{ .Chart.Name }}
           ports:
             - containerPort: {{ .Values.containers.containerPort }}
               protocol: TCP
@@ -30,22 +30,19 @@ spec:
       maxUnavailable: 25%
       maxSurge: 25%
   revisionHistoryLimit: 10
-  ...  #this will Create Volume From our ConfigMap
+  # Volume section starts here
+  volumes:
+    - name: index-html
+      configMap:
+        name: '{{ .Chart.Name }}-html'
+        defaultMode: 420
+  # End of volume definition
+
 spec:
-...  
   template:
-  ...     
     spec:
-      volumes:
-        - name: index-html
-          configMap:
-            name: '{{ .Chart.Name }}-html'
-            defaultMode: 420
-...  # This will mount our File to the Pod File system
       containers:
-      ...
+        - name: {{ .Chart.Name }}
           volumeMounts:
-          - name: index-html
-            mountPath: /tmp/html # this will mount the html.index file to it application location
-      ...
-...
+            - name: index-html
+              mountPath: /tmp/html  # Mounts the html.index file to app location
