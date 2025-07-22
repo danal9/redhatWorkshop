@@ -3,7 +3,6 @@ ReplicaNumber: 3
 containers:
   containerPort: 8080
   image: 'quay.io/danalip/redhatimg:v2'
-  tag: 'base'
 
 service:
   servicePort: 8080
